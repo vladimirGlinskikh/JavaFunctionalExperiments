@@ -1,6 +1,10 @@
 package kz.zhelezyaka.combinator;
 
+import kz.zhelezyaka.combinator.CustomerRegistrationValidator.ValidationResult;
+
 import java.time.LocalDate;
+
+import static kz.zhelezyaka.combinator.CustomerRegistrationValidator.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -10,6 +14,14 @@ public class Main {
                 "+77019876512",
                 LocalDate.of(2000, 2, 15));
 
-        System.out.println(new CustomerValidatorService().isValid(customer));
+        final ValidationResult result = isEmailValid()
+                .and(isPhoneNumberValid())
+                .and(isAnAdult())
+                .apply(customer);
+        System.out.println(result);
+
+        if (result != ValidationResult.SUCCESS) {
+            throw new IllegalStateException(result.name());
+        }
     }
 }
